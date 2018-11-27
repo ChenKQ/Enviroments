@@ -1,8 +1,9 @@
 #! /bin/bash
 homepath=`echo ~`
-anaconda_root=$homepath/anaconda2
+anaconda_root=$homepath/anaconda3
 anaconda_lib=$anaconda_root/lib
 anaconda_include=$anaconda_root/include
+version = "3.6"
 install_prefix=$homepath/programs/opencv
 echo $anaconda_root
 echo $anaconda_lib
@@ -16,11 +17,16 @@ if [ ! -d "$install_prefix" ]; then
 fi
 
 export LD_LIBRARY_PATH=$anaconda_lib:$LD_LIBRARY_PATH
-cmake ../ -DCMAKE_BUILD_TYPE=RELEASE -DWITH_CUDA=OFF -DBUILD_PYTHON_SUPPORT=ON -DPYTHON2_EXECUTABLE=$anaconda_root/bin/python2.7 -DPYTHON_INCLUDE_DIR=$anaconda_include/python2.7 -DPYTHON_LIBRARY=$anaconda_lib/libpython2.7.so -DPYTHON2_NUMPY_INCLUDE_DIRS=/home/chenkq/anaconda2/lib/python2.7/site-packages/numpy/core/include -DPYTHON2_PACKAGES_PATH=/home/chenkq/anaconda2/lib/python2.7/site-packages/numpy/core/include -DCMAKE_INSTALL_PREFIX=$install_prefix/ -DPNG_LIBRARY_RELEASE=$anaconda_lib/libpng.so -DJPEG_LIBRARY_RELEASE=$anaconda_lib/libjpeg.so -DTIFF_LIBRARY_RELEASE=$anaconda_lib/libtiff.so
+cmake ../ -DCMAKE_BUILD_TYPE=RELEASE -DWITH_CUDA=OFF -DBUILD_PYTHON_SUPPORT=ON -DPYTHON3_EXECUTABLE=$anaconda_root/bin/python$version -DPYTHON_INCLUDE_DIR=$anaconda_include/python$version -DPYTHON_LIBRARY=$anaconda_lib/libpython$version.so -DPYTHON3_NUMPY_INCLUDE_DIRS=$anaconda_lib/python$version/site-packages/numpy/core/include -DPYTHON3_PACKAGES_PATH=$anaconda_lib/python$version/site-packages/numpy/core/include -DCMAKE_INSTALL_PREFIX=$install_prefix/ -DPNG_LIBRARY_RELEASE=$anaconda_lib/libpng.so -DJPEG_LIBRARY_RELEASE=$anaconda_lib/libjpeg.so -DTIFF_LIBRARY_RELEASE=$anaconda_lib/libtiff.so
 
 make -j8
 make install
 
-cp $install_prefix/lib/python2.7/site-packages/* $anaconda_lib/python2.7/site-packages/
+cp $install_prefix/lib/python$version/site-packages/* $anaconda_lib/python$version/site-packages/
+
+echo "#opencv" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=$install_prefix:$LD_LIBRARY_PATH" >> ~/.bashrc
+echo "export C_INCLUDE_PATH=$install_prefix:$C_INCLUDE_PATH" >> ~/.bashrc
+echo "export CPLUS_INCLUDE_PATH=$install_prefix:$CPLUS_INCLUDE_PATH" >> ~/.bashrc
 
 source ~/.bashrc
