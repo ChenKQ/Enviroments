@@ -3,7 +3,7 @@ homepath=`echo ~`
 anaconda_root=$homepath/anaconda3
 anaconda_lib=$anaconda_root/lib
 anaconda_include=$anaconda_root/include
-version = "3.6"
+version=3.6
 install_prefix=$homepath/programs/opencv
 echo $anaconda_root
 echo $anaconda_lib
