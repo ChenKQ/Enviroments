@@ -1,0 +1,68 @@
+from ubuntu
+
+maintainer kaycharm kaycham@163.com
+
+#port map
+EXPOSE 8888 
+EXPOSE 22 
+EXPOSE 6006
+
+#install gcc, g++ and gdb
+RUN apt-get -y update && apt-get install -y apt-utils
+RUN apt-get install -y gcc && apt-get install -y g++ && apt-get install -y gdb
+
+#basic tools
+RUN apt-get install -y wget && apt-get install -y vim && apt-get install -y bzip2 && \
+    apt-get install -y git && apt-get install -y cmake
+RUN apt-get install -y unzip && apt-get install -y net-tools
+
+#python packages
+
+
+
+#ssh-server
+RUN apt-get install -y openssh-server && apt-get install -y openssh-client
+RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
+    sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config     &&\
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config       &&\
+    mkdir -p /backup  &&  env  > /backup/env.txt
+
+
+#anaconda 3
+RUN wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-5.2.0-Linux-x86_64.sh \
+    && mv Anaconda3-5.2.0-Linux-x86_64.sh ./anaconda3.sh
+RUN sh anaconda3.sh -bfs
+RUN echo '#anaconda3'>> /root/.bashrc && echo 'export PATH=/root/anaconda3/bin:$PATH' >> /root/.bashrc
+ENV PATH /root/anaconda3/bin:$PATH
+RUN pip install PyHamcrest
+RUN pip install --upgrade pip && rm anaconda3.sh
+ADD src.condarc ./.condarc
+
+#anaconda 2
+#ADD Anaconda2-5.3.1-Linux-x86_64.sh ./anaconda2.sh
+#RUN sh anaconda2.sh -bfs
+#RUN echo '#anaconda2'>> /root/.bashrc && echo 'export PATH=/root/anaconda2/bin:$PATH' >> /root/.bashrc
+#ENV PATH /root/anaconda2/bin:$PATH
+#RUN pip install PyHamcrest
+#RUN pip install --upgrade pip && rm anaconda2.sh
+#ADD .condarc ./
+
+#opencv
+#RUN conda install -y -c conda-forge opencv && conda install -y -c conda-forge/label/broken opencv
+
+#opencv and gdal
+RUN conda install -y -c menpo opencv gdal
+
+#pytorch
+RUN conda install -y pytorch-cpu torchvision-cpu -c pytorch
+
+#mxnet
+RUN pip install mxnet && pip install gluoncv --upgrade
+
+#tensorflow
+RUN pip install tensorflow tensorboard
+
+#mxboard
+RUN pip install mxboard
+
+CMD ["/usr/sbin/sshd", "-D", "&"]

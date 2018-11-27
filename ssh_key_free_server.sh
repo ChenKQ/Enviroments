@@ -1,1 +1,1 @@
-cat id_rsa.pub >> authorized_keys
+cat id_rsa.pub >> ~/.ssh/authorized_keys
