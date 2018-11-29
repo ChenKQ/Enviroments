@@ -1,0 +1,63 @@
+from nvidia/cuda:8.0-cudnn5-devel
+#from nvidia/cuda:9.0-cudnn7-devel 
+
+maintainer kaycharm kaycham@163.com
+
+#port map
+EXPOSE 8888 
+EXPOSE 22 
+EXPOSE 6006
+
+#install gcc, g++ and gdb
+RUN apt-get -y update && \
+    apt-get install -y apt-utils \
+    gcc g++ gdb \
+    wget vim bzip2 git cmake unzip net-tools \
+    openssh-server openssh-client &&\
+    apt-get purge && apt-get clean
+
+#ssh configuration
+RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
+    sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config     &&\
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config       &&\
+    mkdir -p /backup  &&  env  > /backup/env.txt
+
+#anaconda 3
+RUN wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-5.2.0-Linux-x86_64.sh \
+    && mv Anaconda3-5.2.0-Linux-x86_64.sh ./anaconda3.sh && sh anaconda3.sh -bfs && \
+    echo '#anaconda3'>> /root/.bashrc && echo 'export PATH=/root/anaconda3/bin:$PATH' >> /root/.bashrc
+ENV PATH /root/anaconda3/bin:$PATH
+RUN --no-cache-dir pip install --upgrade pip && rm anaconda3.sh && conda clean -all
+ADD src.condarc ./.condarc
+
+#anaconda 2
+#ADD Anaconda2-5.3.1-Linux-x86_64.sh ./anaconda2.sh
+#RUN sh anaconda2.sh -bfs
+#RUN echo '#anaconda2'>> /root/.bashrc && echo 'export PATH=/root/anaconda2/bin:$PATH' >> /root/.bashrc
+#ENV PATH /root/anaconda2/bin:$PATH
+#RUN pip install PyHamcrest
+#RUN pip install --upgrade pip && rm anaconda2.sh
+#ADD .condarc ./
+
+#opencv
+#RUN conda install -y -c conda-forge opencv && conda install -y -c conda-forge/label/broken opencv
+
+#opencv and gdal
+RUN conda install -y -c menpo opencv gdal && conda clean -all
+#pytorch
+#RUN conda install pytorch torchvision -c pytorch
+#RUN pip --no-cache-dir install torch torchvision
+RUN pip install --no-cache-dir http://download.pytorch.org/whl/cu80/torch-0.4.1-cp36-cp36m-linux_x86_64.whl && \
+    pip install torchvision
+
+#mxnet
+RUN pip --no-cache-dir install mxnet-cu80 && pip install gluoncv --upgrade
+
+#tensorflow
+RUN pip --no-cache-dir install tensorflow-gpu tensorboard
+
+#mxboard
+RUN pip --no-cache-dir install mxboard
+
+CMD ["/usr/sbin/sshd", "-D", "&"]
+#CMD ["/bin/bash"]

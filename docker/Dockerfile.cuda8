@@ -1,0 +1,7 @@
+from nvidia/cuda:8.0-cudnn5-devel
+
+maintainer kaycharm kaycham@163.com
+
+RUN apt update
+
+CMD ["/bin/bash"]
