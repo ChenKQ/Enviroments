@@ -25,6 +25,7 @@ $ sha1:xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxx
  - jupyter notebook --generate-config 
  - vim ~/.jupyter/jupyter_notebook_config.py
  - set c.NotebookApp.ip = '*'
+ - c.NotebookApp.allow_remote_access = True
  - set c.NotebookApp.allow_root = True
  - set c.NotebookApp.password = u'sha1:xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxx' 
  - set c.NotebookApp.open_browser = False
@@ -34,7 +35,7 @@ $ sha1:xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxx
  - in the local machine: ssh -N -f -L localhost:8888(local port):localhost:8889(server port) username@serverip
 
 ## 2. openblas
- - make -j\$(nproc)
+ - make -j$(nproc)
  - make install --prefix=....
  
 ## 3. opencv
@@ -45,10 +46,10 @@ $ sha1:xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxx
 ## 4. gdal
  - copy gdal_install.sh to the root directory of the source code of gdal
  - bash gdal_install.sh
- - export LD_LIBRARY_PATH=.....\$LD_LIBRARY_PATH
+ - export LD_LIBRARY_PATH=.....$LD_LIBRARY_PATH
 
 ## 5. Compile mxnet
  - copy config.mk to the root directory of source code of mxnet
- - make -j\$(nproc)
+ - make -j$(nproc)
  - cd python
  - python setup.py install
