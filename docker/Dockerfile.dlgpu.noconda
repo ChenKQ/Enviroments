@@ -1,5 +1,4 @@
 from nvidia/cuda:8.0-cudnn5-devel
-#from nvidia/cuda:9.0-cudnn7-devel 
 
 maintainer kaycharm kaycham@163.com
 
@@ -12,7 +11,7 @@ EXPOSE 6006
 RUN apt -y update && \
     apt install -y apt-utils \
     gcc g++ gdb \
-    python3-dev python3-pip ipython3 \
+    python3-dev python3-pip \
     wget vim bzip2 git cmake unzip net-tools \
     openssh-server openssh-client \
     libopencv-dev libgdal-dev python3-gdal\
