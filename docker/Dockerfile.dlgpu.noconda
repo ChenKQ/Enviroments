@@ -26,12 +26,11 @@ RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
     mkdir -p /backup  &&  env  > /backup/env.txt
 
 #python packages
-RUN pip3 install --no-cache-dir jupyter numpy scipy matplotlib scikit-learn scikit-image pandas image h5py easydict \
+RUN pip3 install --no-cache-dir jupyter numpy scipy matplotlib scikit-learn scikit-image pandas image h5py easydict ipython\
     opencv-python \
-    http://download.pytorch.org/whl/cu80/torch-0.4.1-cp35-cp35m-linux_x86_64.whl torchvision \
+    https://download.pytorch.org/whl/cu80/torch-1.0.0-cp35-cp35m-linux_x86_64.whl torchvision \
     mxnet-cu80 gluoncv \
     tensorflow-gpu tensorboard \
     mxboard
 
 CMD ["/usr/sbin/sshd", "-D", "&"]
-#CMD ["/bin/bash"]
