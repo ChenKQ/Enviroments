@@ -3,7 +3,7 @@ from nvidia/cuda:10.0-devel-ubuntu18.04
 maintainer kaycharm kaycham@163.com
 #env
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Shanghai
+ARG TZ=Asia/Shanghai
 #port map
 EXPOSE 8888 
 EXPOSE 22 
@@ -27,7 +27,7 @@ RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
     mkdir -p /backup  &&  env  > /backup/env.txt
 
 #python packages
-RUN pip3 install --upgrade pip3
+RUN pip3 install --upgrade pip
 RUN pip3 install --no-cache-dir jupyter numpy scipy matplotlib scikit-learn scikit-image pandas image h5py easydict ipython\
     opencv-python 
 RUN pip3 install --no-cache-dir mxnet-cu100 tensorflow tensorboard mxboard
