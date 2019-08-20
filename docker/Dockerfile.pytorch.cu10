@@ -31,7 +31,7 @@ RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
 RUN pip3 install --upgrade pip
 RUN pip3 install --no-cache-dir jupyter numpy scipy matplotlib scikit-learn scikit-image pandas image h5py easydict ipython\
     opencv-python 
-RUN pip3 install --no-cache-dir torch torchvision tensorflow tensorboard
+RUN pip3 install --no-cache-dir future torch torchvision tensorflow tensorboard
 
 CMD ["/usr/sbin/sshd", "-D", "&"]
 #CMD ["/bin/bash"]
