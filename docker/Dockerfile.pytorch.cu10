@@ -29,8 +29,9 @@ RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
 
 #python packages
 RUN pip3 install --upgrade pip
-RUN pip3 install --no-cache-dir jupyter numpy==1.17.0 scipy matplotlib scikit-learn scikit-image pandas image h5py lmdb easydict ipython\
-    opencv-python 
+RUN pip3 install --no-cache-dir jupyter numpy==1.17.0 scipy matplotlib scikit-learn scikit-image pandas image h5py lmdb msgpack pyarrow easydict ipython\
+    opencv-python
+RUN pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/cuda/10.0 nvidia-dali 
 RUN pip3 install --no-cache-dir future torch torchvision tensorflow tensorboard
 
 CMD ["/usr/sbin/sshd", "-D", "&"]
