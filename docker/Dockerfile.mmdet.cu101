@@ -1,0 +1,47 @@
+ARG PYTORCH="1.6.0"
+ARG CUDA="10.1"
+ARG CUDNN="7"
+
+FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
+
+#port map
+EXPOSE 8888 
+EXPOSE 22 
+EXPOSE 6006
+
+ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0+PTX"
+ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
+ENV CMAKE_PREFIX_PATH="$(dirname $(which conda))/../"
+
+RUN apt-get update 
+  &&  apt-get install -y apt-utils \
+                                             ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 \
+                                             wget vim bzip2 cmake unzip net-tools openssh-server openssh-client \
+  && apt purge && apt clean \
+  && rm -rf /var/lib/apt/lists/*
+
+  # install opencv
+  RUN pip install opencv-contrib-python
+
+# Install MMCV
+RUN pip install mmcv-full==latest+torch1.6.0+cu101 -f https://openmmlab.oss-accelerate.aliyuncs.com/mmcv/dist/index.html
+
+# Install MMDetection
+RUN conda clean --all
+RUN git clone https://github.com/open-mmlab/mmdetection.git /mmdetection
+WORKDIR /mmdetection
+ENV FORCE_CUDA="1"
+RUN pip install -r requirements/build.txt
+RUN pip install --no-cache-dir -e .
+
+
+
+from nvidia/cuda:9.0-cudnn7-devel
+
+maintainer kaycharm kaycham@163.com
+
+#ssh configuration
+RUN mkdir -p /var/run/sshd     &&   echo 'root:password' |chpasswd     &&\
+    sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config     &&\
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config       &&\
+    mkdir -p /backup  &&  env  > /backup/env.txt
